@@ -118,7 +118,7 @@ struct Var : VarTag {
   using Scope = UniqueT<void, VarID>;
 
   template <typename T, auto W = [] {}>
-  auto& operator=(T&& rhs) {
+  constexpr auto& operator=(T&& rhs) {
     (void)TypeWriter<UnvarT<W, T>, Scope, W>();
     value.emplace<UnvarT<W, T>>(UnvarForward<W, T>(rhs));
     return *this;
@@ -126,12 +126,12 @@ struct Var : VarTag {
 
   template <typename T, auto W = [] {},
             typename = decltype(TypeWriter<UnvarT<W, T>, Scope, W>())>
-  Var(T&& rhs) {  // NOLINT
+  constexpr Var(T&& rhs) {  // NOLINT
     value.emplace<UnvarT<W, T>>(UnvarForward<W, T>(rhs));
   }
 
   template <auto W = [] {}>
-  auto operator->() {
+  constexpr auto operator->() {
     using LastT
         = decltype(Back(Injector(Flag<Scope, Reader<Scope, 1, W>()>{})));
     return std::any_cast<LastT>(&value);
@@ -145,7 +145,7 @@ struct Var : VarTag {
   }
 
   template <auto W = [] {}>
-  decltype(auto) Get() const {
+  constexpr decltype(auto) Get() const {
     using LastT
         = decltype(Back(Injector(Flag<Scope, Reader<Scope, 1, W>()>{})));
     return std::any_cast<const LastT&>(value);
@@ -153,7 +153,8 @@ struct Var : VarTag {
 
   template <auto W = [] {}>
       // NOLINTNEXTLINE
-      operator decltype(Back(Injector(Flag<Scope, Reader<Scope, 1, W>()>{})))
+      constexpr operator decltype(
+          Back(Injector(Flag<Scope, Reader<Scope, 1, W>()>{})))
       & () {
     using LastT
         = decltype(Back(Injector(Flag<Scope, Reader<Scope, 1, W>()>{})));
@@ -161,117 +162,117 @@ struct Var : VarTag {
   }
 
   template <auto W = [] {}>
-  decltype(auto) operator++(int) {
+  constexpr decltype(auto) operator++(int) {
     return Get<W>()++;
   }
 
   template <auto W = [] {}>
-  decltype(auto) operator++() {
+  constexpr decltype(auto) operator++() {
     return ++Get<W>();
   }
 
   template <auto W = [] {}>
-  decltype(auto) operator--(int) {
+  constexpr decltype(auto) operator--(int) {
     return Get<W>()--;
   }
 
   template <auto W = [] {}>
-  decltype(auto) operator--() {
+  constexpr decltype(auto) operator--() {
     return --Get<W>();
   }
 
   template <auto W = [] {}, typename... Args>
-  decltype(auto) operator[](Args&&... args) {
+  constexpr decltype(auto) operator[](Args&&... args) {
     return Get<W>().operator[](std::forward<Args>(args)...);
   }
 
   template <auto W = [] {}, typename... Args>
-  decltype(auto) operator()(Args&&... args) {
+  constexpr decltype(auto) operator()(Args&&... args) {
     return (Get<W>())(std::forward<Args>(args)...);
   }
 
   template <auto W = [] {}>
-  decltype(auto) operator*() {
+  constexpr decltype(auto) operator*() {
     return *(Get<W>());
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator<(T&& arg) {
+  constexpr decltype(auto) operator<(T&& arg) {
     return Get<W>() < UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator>(T&& arg) {
+  constexpr decltype(auto) operator>(T&& arg) {
     return Get<W>() > UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator<=(T&& arg) {
+  constexpr decltype(auto) operator<=(T&& arg) {
     return Get<W>() <= UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator>=(T&& arg) {
+  constexpr decltype(auto) operator>=(T&& arg) {
     return Get<W>() >= UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator==(T&& arg) {
+  constexpr decltype(auto) operator==(T&& arg) {
     return Get<W>() == UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator!=(T&& arg) {
+  constexpr decltype(auto) operator!=(T&& arg) {
     return Get<W>() != UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator<=>(T&& arg) {
+  constexpr decltype(auto) operator<=>(T&& arg) {
     return Get<W>() <=> UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator+(T&& arg) {
+  constexpr decltype(auto) operator+(T&& arg) {
     return Get<W>() + UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator-(T&& arg) {
+  constexpr decltype(auto) operator-(T&& arg) {
     return Get<W>() - UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator+=(T&& arg) {
+  constexpr decltype(auto) operator+=(T&& arg) {
     return Get<W>() += UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator-=(T&& arg) {
+  constexpr decltype(auto) operator-=(T&& arg) {
     return Get<W>() -= UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator*(T&& arg) {
+  constexpr decltype(auto) operator*(T&& arg) {
     return Get<W>() * UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator*=(T&& arg) {
+  constexpr decltype(auto) operator*=(T&& arg) {
     return Get<W>() *= UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}, typename T>
-  decltype(auto) operator/=(T&& arg) {
+  constexpr decltype(auto) operator/=(T&& arg) {
     return Get<W>() /= UnvarForward<W, T>(arg);
   }
 
   template <auto W = [] {}>
-  decltype(auto) begin() {  // NOLINT
+  constexpr decltype(auto) begin() {  // NOLINT
     return Get<W>().begin();
   }
 
   template <auto W = [] {}>
-  decltype(auto) end() {  // NOLINT
+  constexpr decltype(auto) end() {  // NOLINT
     return Get<W>().end();
   }
 
