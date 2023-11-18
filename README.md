@@ -14,19 +14,21 @@ Simply include the ```variable.hpp``` header file in your C++ project.
 ```c++
 #include "variable.hpp"
 
+#include <string>
+
 using variable::Var;
 
 int main() {
     // Creating Var objects with different data types
     Var a = 10;
-    Var b = "Hello";
+    Var b = std::string("Hello");
     
     // Using different operators with Var objects
     Var sum = a + 5;
     Var concat = b + " World";
     
     // Calling member functions from Var objects
-    Var str = "example";
+    Var str = std::string("example");
     Var length = str->size();
     
     return 0;
